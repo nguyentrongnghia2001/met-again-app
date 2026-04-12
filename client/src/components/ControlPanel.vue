@@ -31,28 +31,45 @@ defineEmits(["next", "start", "toggle-camera", "toggle-mic", "toggle-report"]);
 
 <template>
   <section class="control-card">
-    <div class="control-group">
-      <button class="primary-button" :disabled="!canStart" @click="$emit('start')">Start</button>
-      <button class="secondary-button" :disabled="!canNext" @click="$emit('next')">Next</button>
-    </div>
+    <button class="control-tile control-tile-start" :disabled="!canStart" @click="$emit('start')">
+      <span class="tile-label">Bắt đầu</span>
+    </button>
 
-    <div class="control-group">
-      <button class="ghost-button" @click="$emit('toggle-mic')">
-        {{ micEnabled ? "Mute Mic" : "Unmute Mic" }}
-      </button>
-      <button class="ghost-button" @click="$emit('toggle-camera')">
-        {{ cameraEnabled ? "Hide Cam" : "Show Cam" }}
-      </button>
-      <button class="ghost-button" :disabled="!canReport" @click="$emit('toggle-report')">
-        Report
-      </button>
-    </div>
+    <button class="control-tile control-tile-stop" :disabled="!canNext" @click="$emit('next')">
+      <span class="tile-label">Tiếp</span>
+    </button>
 
-    <p class="socket-state">
-      Socket:
-      <span :class="socketConnected ? 'online' : 'offline'">
-        {{ socketConnected ? "Connected" : "Disconnected" }}
+    <article class="control-tile control-tile-info">
+      <span class="tile-kicker">Quốc gia</span>
+      <strong>
+        Ngẫu nhiên
+        <span>🌍</span>
+      </strong>
+    </article>
+
+    <article class="control-tile control-tile-info">
+      <span class="tile-kicker">Tôi là</span>
+      <strong>
+        Bất kỳ
+        <span>🙂</span>
+      </strong>
+    </article>
+
+    <div class="utility-row">
+      <button class="utility-chip" @click="$emit('toggle-mic')">
+        {{ micEnabled ? "Mic bật" : "Mic tắt" }}
+      </button>
+      <button class="utility-chip" @click="$emit('toggle-camera')">
+        {{ cameraEnabled ? "Cam bật" : "Cam tắt" }}
+      </button>
+      <button class="utility-chip" :disabled="!canReport" @click="$emit('toggle-report')">
+        Báo cáo
+      </button>
+
+      <span class="utility-state">
+        <span class="utility-dot" :class="socketConnected ? 'online' : 'offline'"></span>
+        {{ socketConnected ? "Socket online" : "Socket offline" }}
       </span>
-    </p>
+    </div>
   </section>
 </template>

@@ -53,35 +53,56 @@ const statusMeta = computed(() => {
   switch (status.value) {
     case "searching":
       return {
-        label: "Searching",
-        description: "Looking for an available partner in the queue.",
+        label: "Đang tìm",
+        description: "Đang tìm một partner ngẫu nhiên trong hàng chờ.",
         tone: "searching",
+        promoLine: "Đang tìm người dùng trực tuyến",
       };
     case "connecting":
       return {
-        label: "Connecting",
-        description: "Match found. Exchanging WebRTC offer, answer and ICE candidates.",
+        label: "Đang kết nối",
+        description: "Đã tìm thấy người phù hợp. Đang trao đổi offer, answer và ICE.",
         tone: "connecting",
+        promoLine: "Đang đồng bộ kết nối video",
       };
     case "connected":
       return {
-        label: "Connected",
-        description: "Peer-to-peer media is active. You can chat, report or skip.",
+        label: "Đã kết nối",
+        description: "Kết nối P2P đã sẵn sàng. Bạn có thể chat, báo cáo hoặc bỏ qua.",
         tone: "connected",
+        promoLine: "Đã ghép nối trực tiếp với partner",
       };
     case "disconnected":
       return {
-        label: "Disconnected",
-        description: "Socket or partner connection was closed. Reconnect and start again.",
+        label: "Đã ngắt",
+        description: "Socket hoặc partner đã ngắt kết nối. Hãy bắt đầu lại.",
         tone: "disconnected",
+        promoLine: "Kết nối đã tạm dừng",
       };
     default:
       return {
-        label: "Ready",
-        description: "Allow camera and microphone, then hit Start for a random match.",
+        label: "Sẵn sàng",
+        description: "Cho phép camera/microphone rồi nhấn Bắt đầu để ghép nhanh.",
         tone: "idle",
+        promoLine: "Camera của bạn đã sẵn sàng",
       };
   }
+});
+
+const safetyMessage = computed(() => {
+  if (mediaError.value) {
+    return mediaError.value;
+  }
+
+  if (errorMessage.value) {
+    return errorMessage.value;
+  }
+
+  if (reportSuccess.value) {
+    return reportSuccess.value;
+  }
+
+  return "Bằng cách nhấn \"Bắt đầu\", bạn đồng ý với quy tắc của chúng tôi. Vui lòng giữ khuôn mặt của bạn trong khung hình camera.";
 });
 
 const handleReportSubmit = async (payload) => {
@@ -98,44 +119,25 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="app-shell">
-    <section class="hero-card">
-      <div>
-        <p class="eyebrow">Met Again</p>
-        <h1>Random video chat MVP built for fast local iteration.</h1>
-        <p class="hero-copy">
-          Vue 3 handles the UI, Socket.IO handles signaling, and WebRTC keeps media peer to peer.
-        </p>
-      </div>
-
-      <div class="hero-status">
-        <StatusBadge :label="statusMeta.label" :tone="statusMeta.tone" />
-        <p>{{ statusMeta.description }}</p>
-      </div>
+  <main class="app-shell ometv-shell">
+    <section class="floating-status">
+      <StatusBadge :label="statusMeta.label" :tone="statusMeta.tone" />
+      <span class="floating-dot" :data-tone="statusMeta.tone"></span>
+      <p>{{ statusMeta.description }}</p>
     </section>
 
-    <section v-if="mediaError || errorMessage || reportSuccess" class="alert-stack">
-      <article v-if="mediaError" class="alert-card warning">
-        <strong>Media access:</strong> {{ mediaError }}
-      </article>
-      <article v-if="errorMessage" class="alert-card danger">
-        <strong>Realtime:</strong> {{ errorMessage }}
-      </article>
-      <article v-if="reportSuccess" class="alert-card success">
-        <strong>Report:</strong> {{ reportSuccess }}
-      </article>
-    </section>
-
-    <section class="dashboard-grid">
+    <section class="ometv-frame">
       <VideoStage
+        :camera-enabled="cameraEnabled"
         :local-stream="localStream"
+        :online-label="statusMeta.promoLine"
         :partner-media-state="partnerMediaState"
         :remote-stream="remoteStream"
         :status-description="statusMeta.description"
         :status-label="statusMeta.label"
       />
 
-      <div class="sidebar-column">
+      <section class="bottom-deck">
         <ControlPanel
           :camera-enabled="cameraEnabled"
           :can-next="canNext"
@@ -150,37 +152,33 @@ onMounted(async () => {
           @toggle-report="showReportPanel = !showReportPanel"
         />
 
-        <section class="panel-card">
-          <div class="panel-heading">
-            <p class="eyebrow">Permissions</p>
-            <h3>Local devices</h3>
-          </div>
+        <section class="chat-stack">
+          <article class="safety-card">
+            <div class="safety-logo">Met</div>
 
-          <p class="device-copy">
-            The app requests camera and microphone on load. Use the retry button if the browser
-            permission prompt was blocked or dismissed.
-          </p>
+            <div class="safety-copy">
+              <p>{{ safetyMessage }}</p>
 
-          <div class="control-group">
-            <button class="secondary-button" :disabled="isRequestingPermission" @click="requestPermissions">
-              {{ isRequestingPermission ? "Requesting..." : "Retry Permissions" }}
-            </button>
-            <StatusBadge
-              :label="hasMediaPermission ? 'Granted' : 'Missing'"
-              :tone="hasMediaPermission ? 'connected' : 'disconnected'"
-            />
-          </div>
+              <button
+                class="link-button"
+                :disabled="isRequestingPermission"
+                @click="requestPermissions"
+              >
+                {{ hasMediaPermission ? "Quyền camera đã cấp" : "Cấp lại quyền camera" }}
+              </button>
+            </div>
+          </article>
+
+          <ReportPanel
+            :is-submitting="isSubmittingReport"
+            :visible="showReportPanel"
+            @close="showReportPanel = false"
+            @submit="handleReportSubmit"
+          />
+
+          <ChatPanel :disabled="!canSendMessage" :messages="messages" @send="sendMessage" />
         </section>
-
-        <ReportPanel
-          :is-submitting="isSubmittingReport"
-          :visible="showReportPanel"
-          @close="showReportPanel = false"
-          @submit="handleReportSubmit"
-        />
-
-        <ChatPanel :disabled="!canSendMessage" :messages="messages" @send="sendMessage" />
-      </div>
+      </section>
     </section>
   </main>
 </template>

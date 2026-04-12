@@ -14,6 +14,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  onlineLabel: {
+    type: String,
+    required: true,
+  },
+  cameraEnabled: {
+    type: Boolean,
+    required: true,
+  },
   statusLabel: {
     type: String,
     required: true,
@@ -40,24 +48,58 @@ watchEffect(() => {
 
 <template>
   <section class="stage-card">
-    <div class="stage-remote">
-      <video ref="remoteVideoRef" autoplay class="stage-video" playsinline />
+    <div class="stage-pane stage-promo">
+      <video v-if="remoteStream" ref="remoteVideoRef" autoplay class="stage-video" playsinline />
 
-      <div v-if="!remoteStream" class="stage-placeholder">
-        <p class="eyebrow">Remote Feed</p>
-        <h2>{{ statusLabel }}</h2>
-        <p>{{ statusDescription }}</p>
+      <div v-if="!remoteStream" class="stage-placeholder promo-shell">
+        <div class="tv-mark">
+          <div class="tv-mark-antenna"></div>
+          <div class="tv-mark-body">
+            <span class="tv-mark-ome">Met</span>
+            <span class="tv-mark-tv">TV</span>
+          </div>
+        </div>
+
+        <div class="promo-online">
+          <span class="promo-dot"></span>
+          <span>{{ onlineLabel }}</span>
+        </div>
+
+        <div class="promo-badges">
+          <div class="promo-badge">
+            <small>Web client</small>
+            <strong>Vue 3</strong>
+          </div>
+          <div class="promo-badge">
+            <small>Realtime</small>
+            <strong>WebRTC</strong>
+          </div>
+        </div>
       </div>
 
       <div v-if="remoteStream" class="partner-indicators">
+        <span class="partner-tag">Partner</span>
         <span :class="{ off: !partnerMediaState.micEnabled }">Mic</span>
         <span :class="{ off: !partnerMediaState.cameraEnabled }">Cam</span>
       </div>
     </div>
 
-    <div class="stage-local">
+    <div class="stage-pane stage-local">
       <video ref="localVideoRef" autoplay class="stage-video" muted playsinline />
-      <span class="local-label">You</span>
+
+      <div class="local-overlay">
+        <div class="local-status">
+          <span class="local-label">Bạn</span>
+          <span class="camera-pill" :class="{ off: !cameraEnabled }">
+            {{ cameraEnabled ? "Camera bật" : "Camera tắt" }}
+          </span>
+        </div>
+
+        <div class="stage-caption">
+          <strong>{{ statusLabel }}</strong>
+          <p>{{ statusDescription }}</p>
+        </div>
+      </div>
     </div>
   </section>
 </template>

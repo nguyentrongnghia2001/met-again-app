@@ -41,12 +41,7 @@ watch(
 </script>
 
 <template>
-  <section class="panel-card">
-    <div class="panel-heading">
-      <p class="eyebrow">Text Chat</p>
-      <h3>Session messages</h3>
-    </div>
-
+  <section class="chat-card">
     <div ref="messagesRef" class="chat-messages">
       <template v-if="hasMessages">
         <article
@@ -55,14 +50,14 @@ watch(
           class="chat-bubble"
           :data-sender="message.sender"
         >
-          <span class="chat-author">{{ message.sender === "self" ? "You" : "Partner" }}</span>
+          <span class="chat-author">{{ message.sender === "self" ? "Bạn" : "Partner" }}</span>
           <p>{{ message.text }}</p>
           <time>{{ new Date(message.sentAt).toLocaleTimeString() }}</time>
         </article>
       </template>
 
       <div v-else class="chat-empty">
-        Messages appear here after the call connects.
+        Tin nhắn sẽ xuất hiện khi phiên call được kết nối.
       </div>
     </div>
 
@@ -71,12 +66,10 @@ watch(
         v-model="draft"
         :disabled="disabled"
         maxlength="500"
-        placeholder="Type a message..."
+        placeholder="Viết một tin nhắn"
         type="text"
       />
-      <button class="primary-button" :disabled="disabled || !draft.trim()" type="submit">
-        Send
-      </button>
+      <button class="chat-send" :disabled="disabled || !draft.trim()" type="submit">Gửi</button>
     </form>
   </section>
 </template>

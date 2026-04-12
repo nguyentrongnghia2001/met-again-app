@@ -28,38 +28,40 @@ const submit = () => {
 </script>
 
 <template>
-  <section v-if="visible" class="panel-card report-card">
-    <div class="panel-heading">
-      <p class="eyebrow">Basic Report</p>
-      <h3>Flag current partner</h3>
-    </div>
+  <section v-if="visible" class="report-overlay" @click.self="$emit('close')">
+    <div class="report-card">
+      <div class="panel-heading">
+        <p class="eyebrow">Báo cáo</p>
+        <h3>Gắn cờ partner hiện tại</h3>
+      </div>
 
-    <label class="field">
-      <span>Reason</span>
-      <select v-model="form.reason">
-        <option value="spam">Spam</option>
-        <option value="nudity">Nudity</option>
-        <option value="harassment">Harassment</option>
-        <option value="hate-speech">Hate speech</option>
-        <option value="other">Other</option>
-      </select>
-    </label>
+      <label class="field">
+        <span>Lý do</span>
+        <select v-model="form.reason">
+          <option value="spam">Spam</option>
+          <option value="nudity">Nội dung nhạy cảm</option>
+          <option value="harassment">Quấy rối</option>
+          <option value="hate-speech">Ngôn từ thù ghét</option>
+          <option value="other">Khác</option>
+        </select>
+      </label>
 
-    <label class="field">
-      <span>Details</span>
-      <textarea
-        v-model="form.details"
-        maxlength="500"
-        placeholder="Optional context for moderation follow-up."
-        rows="4"
-      />
-    </label>
+      <label class="field">
+        <span>Chi tiết</span>
+        <textarea
+          v-model="form.details"
+          maxlength="500"
+          placeholder="Mô tả thêm nếu cần cho phần follow-up."
+          rows="4"
+        />
+      </label>
 
-    <div class="control-group">
-      <button class="primary-button" :disabled="isSubmitting" @click="submit">
-        {{ isSubmitting ? "Submitting..." : "Submit Report" }}
-      </button>
-      <button class="secondary-button" type="button" @click="$emit('close')">Close</button>
+      <div class="report-actions">
+        <button class="chat-send" :disabled="isSubmitting" @click="submit">
+          {{ isSubmitting ? "Đang gửi..." : "Gửi báo cáo" }}
+        </button>
+        <button class="report-close" type="button" @click="$emit('close')">Đóng</button>
+      </div>
     </div>
   </section>
 </template>
