@@ -1,0 +1,17 @@
+export const EVENTS = {
+  APP_ERROR: "app:error",
+  MATCH_ENQUEUE: "match:enqueue",
+  MATCH_FOUND: "match:found",
+  MATCH_NEXT: "match:next",
+  QUEUE_JOINED: "queue:joined",
+  SESSION_CONNECTED: "session:connected",
+  SESSION_ENDED: "session:ended",
+  SESSION_REPORT: "session:report",
+  REPORT_SUBMITTED: "report:submitted",
+  SIGNAL_OFFER: "signal:offer",
+  SIGNAL_ANSWER: "signal:answer",
+  SIGNAL_ICE_CANDIDATE: "signal:ice-candidate",
+  CHAT_MESSAGE: "chat:message",
+  MEDIA_STATE: "media:state",
+  PARTNER_MEDIA_STATE: "partner:media-state",
+};
