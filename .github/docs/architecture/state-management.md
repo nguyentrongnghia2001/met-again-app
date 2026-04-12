@@ -1,21 +1,62 @@
-# Pinia State Management Rules (Apps Manager)
+# State Management Rules
 
-## Rule 1. Single Source of Truth
-- **NEVER** instantiate localized reactive states for structural page data inside Vue files. (e.g., `const currentData = ref({})`).
-- **ALWAYS** compute or `storeToRefs` structural data from `useProjectStore()`.
-- Local `ref`/`reactive` is **strictly designed for local UI components** (e.g., Modals overlapping, toggle states (`isOpen`), internal UI processing counters).
+This project does not currently use Pinia or another global client store. State ownership is split by runtime boundary.
 
-## Rule 2. Mutation Isolation
-Do not manually mutate `pageData` properties deep in nested DOM without bubbling (`emit`).
-If a block is updated (e.g., SEO plugin configuration changes), bubble the result upwards using `emit('updateDataPlugin', newBlock)` or dispatch a direct Pinia action (`projectStore.setComponentConfig`).
+## 1. Browser-local state
 
-## Rule 3. Action Pattern
-Store functions inside Pinia `defineStore()` manage complex side-effects (API fetch + state set).
-- E.g. `const setHistoryItem = (payload) => { ... }` ensures undo/redo loops remain pristine.
+Keep the following inside the component or composable that directly owns the browser API:
+- `MediaStream`
+- `RTCPeerConnection`
+- permission prompts and device errors
+- DOM refs for local and remote video elements
+- transient UI flags such as modal visibility or input text
 
-## Rule 4. Permissions Mapping
-Use predefined getters explicitly.
-```javascript
-const { isAdmin, isSEO, isDeveloper } = storeToRefs(useProjectStore());
-```
-Hide all sensitive editing tools wrapping templates with `v-if="isAdmin"`.
+`useMediaDevices()` is the current example of this pattern.
+
+## 2. Feature-level client state
+
+The future call screen will likely own:
+- queue status
+- current `sessionId`
+- partner identity metadata returned by the server
+- local chat history
+- reconnect and error banners
+
+Until there is a real need for a shared store, keep this state close to the feature that renders it. Avoid introducing a global store just to mirror socket events.
+
+## 3. Server runtime state
+
+`MatchmakingService` is the source of truth for live session coordination:
+- which sockets are registered
+- who is queued
+- who is paired
+- which live session id a socket belongs to
+- each participant's last known media flags
+
+Do not duplicate this state in Express globals, module-level side tables, or Mongo documents.
+
+## 4. Persisted state
+
+MongoDB stores serializable records only:
+- `Session` documents for lifecycle timestamps, end reasons, and counters
+- `Report` documents for moderation actions
+
+Persisted state is append/update oriented. It does not drive the live matchmaking loop.
+
+## 5. Rules for future shared client state
+
+If a shared store is introduced later:
+1. Store only serializable application state.
+2. Do not put `MediaStream`, `RTCPeerConnection`, or raw socket instances into the store.
+3. Keep one owner for each piece of state to avoid race conditions between callbacks and watchers.
+4. Let the server-issued `sessionId` remain the canonical identifier for a live match.
+
+## 6. Reset behavior
+
+When a session ends or a socket disconnects, reset state in this order:
+1. clear feature-level session metadata
+2. remove socket listeners tied to the old session
+3. close the peer connection
+4. stop or repurpose local media tracks as needed by the UX
+
+This ordering prevents stale events from mutating a new session.

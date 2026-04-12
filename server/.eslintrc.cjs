@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ["dist/", "node_modules/"],
   env: {
     node: true,
     es2022: true,
@@ -11,5 +12,6 @@ module.exports = {
   },
   rules: {
     "no-console": "off",
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
   },
 };

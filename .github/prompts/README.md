@@ -1,39 +1,39 @@
-# Prompts Guide (AI-Ready)
+# Prompt Guide
 
-Thư mục `.github/prompts` chứa các prompt template có thể gọi trực tiếp trong chat bằng lệnh `/`.
+The `.github/prompts` folder contains slash-command prompt templates for common work in this repository.
 
-## Cách dùng nhanh
+## Quick Usage
 
-1. Mở chat Copilot/Cursor trong workspace.
-2. Gõ `/` để mở danh sách prompt.
-3. Chọn prompt theo nhu cầu (Refactor, Fix Bug, Generate Component...).
-4. Nhập mô tả task cụ thể theo `argument-hint`.
+1. Open GitHub Copilot Chat or another prompt-aware editor in this workspace.
+2. Type `/` to open the prompt list.
+3. Pick the closest template.
+4. Replace the argument hint with the concrete bug, feature, or flow you want to work on.
 
-## Các prompt sẵn có
+## Available Prompts
 
 ### Code
-- `/Refactor Vue/Nuxt`
 - `/Fix Bug`
-- `/Optimize Performance`
+- `/Optimize Realtime`
+- `/Refactor Realtime Flow`
 
 ### Generate
-- `/Generate Component`
+- `/Generate Vue Component`
 - `/Generate Composable`
-- `/Generate Service`
+- `/Generate Backend Service`
 
 ### Domain
-- `/Booking Task`
-- `/Gallery Task`
+- `/Matchmaking Task`
+- `/Moderation Task`
 
-## Ví dụ câu lệnh thực tế
+## Example Commands
 
-- `/Refactor Vue/Nuxt Refactor components/SlideEditPageLayer.vue: tách logic upload gallery thành composable, giữ nguyên behavior.`
-- `/Fix Bug Sửa bug delete multiple không hoạt động khi wrapper key là list_iframe.`
-- `/Generate Component Tạo component Modal xác nhận xoá nhiều section, dùng @nuxt/ui.`
-- `/Generate Service Tạo API method getPluginStoreList với typing rõ request/response.`
-- `/Gallery Task Tối ưu flow upload nhiều ảnh, hiển thị progress và toast lỗi rõ ràng.`
+- `/Fix Bug Matchmaking sometimes requeues the same socket twice after a disconnect.`
+- `/Refactor Realtime Flow Extract peer-connection lifecycle from the call screen into a composable.`
+- `/Generate Vue Component Create a waiting-room panel that shows queue, connection, and error states.`
+- `/Generate Backend Service Add a moderation service helper that stores admin review decisions for reports.`
+- `/Matchmaking Task Add a timeout strategy when a matched peer never finishes WebRTC negotiation.`
 
-## Lưu ý
+## Notes
 
-- Prompt là task đơn lẻ, nên mô tả càng cụ thể càng tốt.
-- Nếu cần workflow nhiều bước phức tạp, ưu tiên dùng `skills` hoặc `agents`.
+- Keep prompts focused on one task at a time.
+- If the task changes the socket contract, update both event constant files and the relevant docs under `.github/docs/`.

@@ -1,20 +1,18 @@
 ---
-description: "Generate a Vue 3 component for Nuxt 3 using project conventions"
-name: "Generate Component"
-argument-hint: "Mô tả component cần tạo, props, events, UI behavior"
+description: "Generate a Vue 3 component that follows the current Vite and realtime UI conventions"
+name: "Generate Vue Component"
+argument-hint: "Describe the component, props, events, and UI behavior"
 agent: "frontend"
 ---
 
-Tạo component mới theo chuẩn dự án.
+Create a new Vue component that fits the current project conventions.
 
-Bắt buộc:
-- Dùng `<script setup lang=\"ts\">`.
-- Ưu tiên `@nuxt/ui` components trước khi custom UI.
-- Props/Emits typed rõ ràng.
-- Không thêm dependency mới nếu chưa cần thiết.
-- Nếu có state chung, đọc từ Pinia thay vì duplicate local.
+Requirements:
+- use Vue 3 Composition API with explicit imports
+- keep browser API ownership clear if the component touches media or sockets
+- avoid new dependencies unless the task requires them
+- prefer props and emitted events over hidden shared state
 
-Đầu ra mong muốn:
-1. Component code hoàn chỉnh.
-2. Giải thích ngắn cách dùng component (props/events).
-
+Expected output:
+1. complete component code
+2. short usage notes

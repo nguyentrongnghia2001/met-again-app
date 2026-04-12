@@ -1,18 +1,18 @@
 ---
-description: "Generate API service methods following composables/api.ts conventions"
-name: "Generate Service"
-argument-hint: "Mô tả endpoint, request params/body, response shape"
+description: "Generate a backend service helper for Socket.IO or Mongoose-backed flows"
+name: "Generate Backend Service"
+argument-hint: "Describe the use case, inputs, outputs, and whether it changes live state or persisted state"
 agent: "backend"
 ---
 
-Tạo service method mới theo chuẩn `composables/api.ts`.
+Create a backend service method or module that follows the repository boundaries.
 
-Yêu cầu:
-- Tên hàm rõ nghĩa theo action nghiệp vụ.
-- Request/response typing rõ ràng.
-- Xử lý lỗi nhất quán với các API hiện có.
-- Không hardcode URL rời rạc ngoài cấu hình chung.
+Requirements:
+- keep socket transport details out of persistence helpers
+- keep Mongoose writes inside service-layer helpers instead of handlers
+- use clear names that describe the business action
+- document any required event or schema updates
 
-Đầu ra mong muốn:
-1. Method code đầy đủ.
-2. Ví dụ gọi method từ component/composable.
+Expected output:
+1. complete service code
+2. where it should be wired into the existing flow

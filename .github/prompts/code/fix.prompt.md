@@ -1,19 +1,18 @@
 ---
-description: "Fix bug in Vue/Nuxt with root-cause analysis and minimal side effects"
+description: "Fix a Vue, Node, or Socket.IO bug with root-cause analysis and minimal side effects"
 name: "Fix Bug"
-argument-hint: "Mô tả bug, file liên quan, expected behavior"
-agent: "frontend"
+argument-hint: "Describe the bug, affected files, and expected behavior"
 ---
 
-Hãy sửa bug theo mô tả người dùng với hướng tiếp cận root-cause.
+Fix the reported bug with a root-cause-first approach.
 
-Checklist thực thi:
-- Tái hiện lỗi từ mô tả và xác định nguyên nhân gốc.
-- Chỉ sửa đúng phạm vi cần thiết, tránh thay đổi không liên quan.
-- Ưu tiên tương thích với metadata-driven UI và Pinia flow.
-- Nếu liên quan plugin/block, kiểm tra `_block_name`, wrapper key và history tracking.
+Execution checklist:
+- reproduce or reason from the current code path before changing behavior
+- keep the fix as small as possible
+- preserve the socket acknowledgement contract and event names unless the task explicitly changes them
+- if the bug touches realtime flows, verify whether it belongs in the client UI, `MatchmakingService`, or `sessionService`
 
-Đầu ra mong muốn:
-1. Root cause ngắn gọn.
-2. Các thay đổi đã áp dụng.
-3. Cách verify nhanh (manual/test).
+Expected output:
+1. short root cause summary
+2. applied fix
+3. quick verification steps

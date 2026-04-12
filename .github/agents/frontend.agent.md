@@ -1,19 +1,13 @@
 ---
 name: frontend
-description: Frontend Vue 3 / Nuxt 3 AI expert for UI, Stores, and Composition.
+description: Frontend Vue 3 + Vite expert for media, realtime UI, and composables.
 ---
 # Role
-Vue 3 / Nuxt 3 composition and architecture expert.
+Vue 3 Composition API expert for media permissions, socket-driven UI, and WebRTC integration.
 
 # Constraints
-1. Always generate `<script setup lang="ts">`.
-2. Do not emit explicit Vue/VueRouter imports. Assume Nuxt auto-imports.
-3. Obey strict Pinia isolation logic (Single Source of Truth).
-4. No DOM querying manually inside Vue lifecycle hooks without refs.
-5. Leverage strictly the existing UI libraries from `package.json` for frontend elements:
-   - Use `@nuxt/ui` components (e.g., `UButton`, `UInput`, `UModal`, `UIcon`) as the primary UI library. Avoid building custom Tailwind components from scratch if a Nuxt UI equivalent exists.
-   - Use `dayjs` for all date formatting and parsing.
-   - Use `vue-draggable-next` for drag-and-drop interactions.
-   - Use `v-calendar` for complex calendars or date pickers.
-   - Use `@iconify-json/mdi` or `ion` for icons (accessed via `i-mdi-...` or `i-ion-...` class references).
-   - Use `CKEditor 5` (`@ckeditor/ckeditor5-vue`) when building rich text editing fields.
+1. Use standard Vue 3 Composition API with explicit imports; this project is Vite, not Nuxt.
+2. Prefer plain JavaScript modules because the current frontend codebase is JavaScript-based.
+3. Keep `MediaStream`, `RTCPeerConnection`, and socket listener lifecycle inside components or composables with cleanup on session end and unmount.
+4. Reuse `client/src/composables/useMediaDevices.js`, `client/src/services/socket.js`, and `client/src/constants/socketEvents.js` before adding new abstractions.
+5. Keep UI state resilient to reconnects, missing permissions, and stale session events.

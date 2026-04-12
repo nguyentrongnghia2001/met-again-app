@@ -1,19 +1,18 @@
 ---
-description: "Optimize Vue/Nuxt performance without changing product behavior"
-name: "Optimize Performance"
-argument-hint: "Nêu vùng chậm (component/page), triệu chứng, mục tiêu"
-agent: "frontend"
+description: "Optimize realtime or media performance without changing product behavior"
+name: "Optimize Realtime"
+argument-hint: "Describe the slow area, symptoms, and performance goal"
 ---
 
-Tối ưu hiệu năng cho phần người dùng yêu cầu.
+Optimize the requested area without changing the intended behavior.
 
-Ưu tiên kỹ thuật:
-- Giảm re-render không cần thiết (computed/watch hợp lý, tách logic nặng).
-- Tận dụng `v-memo`/`v-once` khi phù hợp.
-- Tránh deep watch quá rộng nếu có thể khoanh vùng key.
-- Giữ nguyên behavior hiện tại và API contract.
+Focus areas:
+- reduce duplicate socket listeners or unnecessary reconnect work
+- limit repeated WebRTC setup and teardown churn
+- keep media and session cleanup deterministic
+- avoid adding complexity unless the current bottleneck justifies it
 
-Đầu ra mong muốn:
-1. Điểm nghẽn chính.
-2. Thay đổi tối ưu đã thực hiện.
-3. Cách đo/check trước-sau (nếu có thể).
+Expected output:
+1. main bottleneck
+2. applied optimization
+3. how to measure or verify the improvement

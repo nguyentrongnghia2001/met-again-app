@@ -1,18 +1,18 @@
 ---
-description: "Generate a Nuxt composable with typed API and reusable logic"
+description: "Generate a reusable Vue composable for media, socket, or session logic"
 name: "Generate Composable"
-argument-hint: "Mô tả logic cần tách, input/output, nơi sử dụng"
+argument-hint: "Describe the logic to extract, inputs, outputs, and where it will be used"
 agent: "frontend"
 ---
 
-Tạo composable mới theo pattern Nuxt 3.
+Create a composable that fits the current frontend architecture.
 
-Yêu cầu:
-- Đặt tên theo `useXxx`.
-- Tách logic thuần khỏi component, tránh thao tác DOM trực tiếp.
-- Có typing rõ cho params/returns.
-- Dễ unit test và tái sử dụng.
+Requirements:
+- name it with the `useXxx` pattern
+- keep browser APIs and cleanup logic inside the composable when appropriate
+- return explicit state and command functions
+- make it easy to reason about session resets and stale-event handling
 
-Đầu ra mong muốn:
-1. File composable hoàn chỉnh.
-2. Ví dụ cách dùng trong component.
+Expected output:
+1. complete composable file
+2. short example of how the feature should consume it

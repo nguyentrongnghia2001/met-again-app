@@ -210,6 +210,7 @@ export class MatchmakingService {
         partner.sessionId = null;
         partner.state = "idle";
 
+        // The remaining peer is returned to the queue immediately to keep the MVP flow continuous.
         partner.socket.emit(EVENTS.SESSION_ENDED, {
           reason,
           autoRequeue: requeuePartner,
