@@ -1,12 +1,28 @@
 import { onBeforeUnmount, ref, shallowRef } from "vue";
 
 const getErrorMessage = (error) => {
+  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+    return "Camera requires a secure context. Open the app with http://localhost:5173 or use HTTPS instead of a LAN IP.";
+  }
+
   if (error?.name === "NotAllowedError") {
     return "Camera/microphone permission was denied. Please allow access and try again.";
   }
 
   if (error?.name === "NotFoundError") {
     return "No camera or microphone was found on this device.";
+  }
+
+  if (error?.name === "NotReadableError") {
+    return "Camera or microphone is busy in another app. Close Zoom, Meet, OBS or other camera apps and try again.";
+  }
+
+  if (error?.name === "AbortError") {
+    return "The browser stopped the camera request before it finished. Try requesting permission again.";
+  }
+
+  if (error?.name === "OverconstrainedError") {
+    return "The requested camera settings are not supported on this device.";
   }
 
   return "Unable to access camera and microphone right now.";
@@ -39,6 +55,10 @@ export const useMediaDevices = () => {
     mediaError.value = "";
 
     try {
+      if (!navigator.mediaDevices?.getUserMedia || !window.isSecureContext) {
+        throw new Error("SecureContextRequired");
+      }
+
       const nextStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
